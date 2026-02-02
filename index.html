@@ -8,13 +8,14 @@
   <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
-  <style>
+ <style>
     :root {
-      --bg1: #ffd6e7;
-      --bg2: #ffeef6;
-      --card: #ffffffcc;
-      --yes: #ff3b7a;
-      --yesHover: #ff1f68;
+      --bg1: #fff0f6; 
+      --bg2: #f8f9ff; 
+      --card: rgba(255, 255, 255, 0.9);
+      --yes: #ff85a2; 
+      --yesHover: #ff6384;
+      --text: #5a4a5f;
     }
 
     * { box-sizing: border-box; }
@@ -24,13 +25,13 @@
       min-height: 100svh;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
-      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      font-family: 'Segoe UI', system-ui, sans-serif;
       overflow: hidden;
       padding: 16px;
+      color: var(--text);
     }
 
-    /* FULL-SCREEN CONFETTI CANVAS */
     #confettiCanvas {
       position: fixed;
       inset: 0;
@@ -41,31 +42,41 @@
     }
 
     .card {
-      width: min(720px, 92vw);
-      padding: 26px 22px;
+      width: min(550px, 92vw);
+      padding: 40px 20px;
       background: var(--card);
-      backdrop-filter: blur(10px);
-      border-radius: 22px;
+      backdrop-filter: blur(15px);
+      border-radius: 30px;
       text-align: center;
-      box-shadow: 0 18px 60px rgba(0,0,0,.15);
+      box-shadow: 0 20px 50px rgba(255, 133, 162, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      z-index: 10;
     }
 
     .art {
-      width: min(260px, 80vw);
-      margin: 0 auto 10px;
+      width: min(200px, 65vw);
+      margin: 0 auto 20px;
       display: block;
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+      filter: drop-shadow(0 8px 15px rgba(0,0,0,0.05));
+      animation: float 3.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
     h1 {
-      font-size: clamp(26px, 4vw, 44px);
-      margin: 12px 0 18px;
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 300;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
     }
 
     .button-zone {
       position: relative;
-      width: min(520px, 92%);
-      height: 150px;
+      width: 100%;
+      height: 140px;
       margin: 0 auto;
       touch-action: none;
     }
@@ -74,56 +85,55 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      padding: 16px 24px;
-      font-size: 18px;
-      font-weight: 800;
-      border-radius: 999px;
+      padding: 14px 35px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 50px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,.14);
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s ease, background .12s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     #yesBtn {
-      left: 18%;
+      left: 15%;
       background: var(--yes);
-      color: #fff;
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 133, 162, 0.3);
     }
-    #yesBtn:hover { background: var(--yesHover); }
 
     #noBtn {
-      left: 62%;
-      background: #e5e7eb;
-      color: #111827;
+      left: 60%;
+      background: #f1f3f5;
+      color: #868e96;
     }
 
     .hint {
-      margin-top: 10px;
-      font-size: 13px;
-      opacity: .7;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #b5bbc1;
+      font-style: italic;
     }
 
     .result {
       display: none;
-      margin-top: 18px;
-      animation: pop .35s ease;
+      animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .result h2 {
-      font-size: clamp(30px, 4.5vw, 46px);
-      margin: 10px 0;
+      font-size: 38px;
+      color: var(--yes);
+      margin-bottom: 10px;
     }
 
     .fireworks {
-      width: min(380px, 90vw);
-      margin: 0 auto;
-      display: block;
+      width: 100%;
+      max-width: 280px;
+      border-radius: 20px;
     }
 
     @keyframes pop {
-      from { transform: scale(.96); opacity: 0; }
+      from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
   </style>
@@ -133,42 +143,32 @@
   <canvas id="confettiCanvas"></canvas>
 
   <main class="card">
-    <!-- ANIMAL WITH HEART -->
     <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="fur" x1="0" x2="1">
-          <stop offset="0" stop-color="#f7c7a1"/>
-          <stop offset="1" stop-color="#f2a97b"/>
-        </linearGradient>
-        <linearGradient id="heart" x1="0" x2="1">
-          <stop offset="0" stop-color="#ff4d7d"/>
-          <stop offset="1" stop-color="#ff1f68"/>
+        <linearGradient id="softFur" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#fff5f7"/>
         </linearGradient>
       </defs>
 
-      <path d="M250 50 C250 33 270 25 282 38
-               C294 25 314 33 314 50
-               C314 78 282 92 282 106
-               C282 92 250 78 250 50Z"
-            fill="url(#heart)"/>
+      <ellipse cx="130" cy="50" rx="14" ry="42" fill="white" transform="rotate(-12, 130, 50)" />
+      <ellipse cx="130" cy="55" rx="7" ry="28" fill="#ffe3e8" transform="rotate(-12, 130, 55)"/>
+      <ellipse cx="190" cy="50" rx="14" ry="42" fill="white" transform="rotate(12, 190, 50)" />
+      <ellipse cx="190" cy="55" rx="7" ry="28" fill="#ffe3e8" transform="rotate(12, 190, 55)"/>
 
-      <path d="M90 120 C90 70 140 40 190 60
-               C240 40 290 70 290 120
-               C290 180 240 210 190 210
-               C140 210 90 180 90 120Z"
-            fill="url(#fur)"/>
+      <circle cx="160" cy="155" r="55" fill="url(#softFur)"/>
+      <circle cx="160" cy="110" r="45" fill="url(#softFur)"/>
 
-      <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b"/>
-      <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b"/>
+      <circle cx="142" cy="105" r="3.5" fill="#4a4a4a"/>
+      <circle cx="178" cy="105" r="3.5" fill="#4a4a4a"/>
+      <circle cx="132" cy="118" r="8" fill="#ffdfe5" opacity="0.7"/>
+<circle cx="188" cy="118" r="8" fill="#ffdfe5" opacity="0.7"/>
+      <path d="M156 122 Q160 125 164 122" fill="none" stroke="#4a4a4a" stroke-width="1.5" stroke-linecap="round"/>
 
-      <circle cx="160" cy="130" r="8"/>
-      <circle cx="220" cy="130" r="8"/>
-
-      <path d="M190 144 C186 144 182 148 182 152
-               C182 160 190 164 190 170
-               C190 164 198 160 198 152
-               C198 148 194 144 190 144Z"
-            fill="#ff7aa2"/>
+      <path d="M160 170 C160 160 175 155 182 165 C189 155 204 160 204 170 C204 185 182 195 182 205 C182 195 160 185 160 170Z" fill="#ff85a2"/>
+      
+      <circle cx="145" cy="165" r="8" fill="white" />
+      <circle cx="175" cy="165" r="8" fill="white" />
     </svg>
 
     <h1>Будеш моєю валентинкою?🥺🤍🤍🤍🤍🤍🤍</h1>
@@ -300,6 +300,7 @@
   </script>
 </body>
 </html>
+
 
 
 
